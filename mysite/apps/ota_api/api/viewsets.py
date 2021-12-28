@@ -1,4 +1,4 @@
-from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from django.http import HttpResponse
@@ -12,7 +12,7 @@ class DeviceViewSet(ModelViewSet):
     #queryset = Device.objects.all()
     serializer_class = DeviceSerializer
     permission_classes = (IsAuthenticated,)
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication, BasicAuthentication)
 
 
     def get_queryset(self):
@@ -22,7 +22,7 @@ class DeviceViewSet(ModelViewSet):
         device_mac = kwargs['pk']
         firmware_name = Device.objects.get(mac_addr = device_mac).firmware
         print("firmware_name", firmware_name)
-        firmware_path = settings.MEDIA_ROOT + "/firmwares/{}.bin".format(firmware_name)
+        firmware_path = settings.MEDIA_ROOT + "/firmwares/firmware_v{}.bin".format(firmware_name)
         print("piedade", firmware_path)
 
         firmware = open(firmware_path, "rb")
@@ -38,4 +38,4 @@ class FirmwareViewSet(ModelViewSet):
     queryset = Firmware.objects.all()
     serializer_class = FirmwareSerializer
     permission_classes = (IsAuthenticated,)
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication, BasicAuthentication)
